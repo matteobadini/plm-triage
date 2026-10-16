@@ -1,56 +1,58 @@
 # plm-triage
 
-Plugin Claude Code per il triage dei ticket Jira di supporto su un PLM agile (Oracle Agile PLM su SQL Server).
-Claude legge il ticket, interroga il DB PLM **solo** tramite query di catalogo approvate (sola lettura) e propone una bozza di risposta o un'escalation motivata.
-Ogni affermazione cita la query che la prova; nel dubbio, escalation a un umano.
+Plugin di Claude Code che aiuta a smistare (triage) i ticket Jira di supporto su Agile PLM (Oracle Agile PLM su SQL Server).
+Claude legge il ticket, consulta il database PLM in sola lettura e **solo** con query approvate dal team, poi propone una risposta oppure un'escalation motivata a una persona.
+Ogni affermazione indica la query o il campo del ticket da cui proviene. Nel dubbio, l'escalation è la regola.
 
 ## Stato
 
-`0.1.0`: **template**. Non è pronto per la produzione finché un'istanza non supera il gate di valutazione ([docs/e2e-protocol.md](docs/e2e-protocol.md)).
+Versione `0.1.0`: è un **modello** da adattare al proprio team. Va usato in produzione solo dopo che il team ha ottenuto il via libera previsto dal [protocollo di valutazione](docs/e2e-protocol.md).
 
 ## Prerequisiti
 
-- [Claude Code](https://code.claude.com/) in versione recente, con un piano Claude aziendale (Team/Enterprise)
+- [Claude Code](https://code.claude.com/) in versione recente, con un piano Claude aziendale (Team o Enterprise)
 - [uv](https://docs.astral.sh/uv/) e git
-- accesso alla board Jira di supporto e alla rete del DB PLM (rete aziendale o VPN)
+- accesso alla board Jira di supporto e alla rete del database PLM (rete aziendale o VPN)
 
-## Avvio rapido
+## Come iniziare
 
-Non serve clonare nulla. In Claude Code, da qualsiasi cartella:
+Non serve clonare nulla. In Claude Code, da qualsiasi cartella, installa il plugin:
 
 ```
 /plugin marketplace add matteobadini/plm-triage
 /plugin install plm-triage@plm-triage
 ```
 
-Se compare il prompt delle opzioni del plugin, puoi lasciare vuoti i campi: li imposterai in fase 0/2 (la password lasciala comunque vuota, va nel keyring).
+Se Claude Code ti chiede le opzioni del plugin, puoi lasciare tutti i campi vuoti: li imposterai durante il setup. La password lasciala comunque vuota: andrà nel keyring.
 
-Poi incolla questo messaggio. Deve **iniziare** con lo slash command, perché il setup si avvia solo così:
+Poi incolla questo messaggio. Deve **iniziare** con il comando `/plm-triage:setup`, altrimenti il setup non parte:
 
 ```
-/plm-triage:setup guidami fino ai test E2E su ticket reali, fermati a ogni checkpoint umano
+/plm-triage:setup guidami fino al collaudo su ticket reali, fermati a ogni punto di controllo
 ```
 
-La fase 0 crea o clona la cartella istanza e ti chiede di riaprire Claude Code lì: rilancia lo stesso messaggio e il setup riprende da dove era. Panoramica di fasi e checkpoint: [docs/setup.md](docs/setup.md).
+Il setup ti chiede se il team ha già un repository di istanza (il repository git privato del team, con configurazione e query). Se è così, tieni pronto il suo URL: te lo passa il collega che ha fatto il primo setup.
+
+Nella fase 0 Claude crea o clona la cartella di istanza e ti chiede di riaprire Claude Code in quella cartella. Lì incolla di nuovo lo stesso messaggio: il setup riprende dal punto in cui si era fermato. Fasi e punti di controllo sono descritti in [docs/setup.md](docs/setup.md).
 
 ## Struttura
 
 ```
-.claude-plugin/        plugin.json (userConfig, MCP plm-db), marketplace.json
-skills/triage-ticket/  procedura di triage + templates.md
-skills/setup/          setup a fasi con checkpoint umani
-server/                MCP locale plm-db (Python, pacchetto plm_db_mcp; CLI plm-db-mcp, plm-db)
-instance-template/     scheletro del repo istanza privato (config, catalog, evals)
-docs/                  architettura, setup, protocollo E2E, ADR
+.claude-plugin/        plugin.json (opzioni del plugin, server MCP plm-db), marketplace.json
+skills/triage-ticket/  procedura di triage + templates.md (modelli di commento)
+skills/setup/          setup a fasi con punti di controllo
+server/                server MCP locale plm-db (Python, pacchetto plm_db_mcp; comandi plm-db-mcp, plm-db)
+instance-template/     modello del repository di istanza (config, catalog, evals)
+docs/                  architettura, setup, protocollo di valutazione, ADR
 ```
 
 ## Documentazione
 
 - [Architettura](docs/architecture.md)
 - [Setup: panoramica](docs/setup.md)
-- [Protocollo di valutazione ed E2E](docs/e2e-protocol.md)
-- [Decisioni (ADR)](docs/adr/README.md)
-- [Sicurezza](SECURITY.md) · [Per agenti che lavorano su questo repo](AGENTS.md)
+- [Protocollo di valutazione e collaudo](docs/e2e-protocol.md)
+- [Decisioni architetturali (ADR)](docs/adr/README.md)
+- [Sicurezza](SECURITY.md) · [Istruzioni per chi modifica questo repository](AGENTS.md)
 
 ## Licenza
 

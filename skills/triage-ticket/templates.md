@@ -1,56 +1,61 @@
-# Template di output — triage-ticket
+# Modelli di output — triage-ticket
 
-Sostituisci i segnaposto `<...>`. Nei commenti Jira niente SQL, nomi di tabelle, host o righe grezze: solo il riepilogo necessario. La traccia completa va nel file di run.
+Sostituisci i segnaposto `<...>`. I commenti Jira li leggono gli utenti che hanno aperto il ticket: niente SQL, nomi di tabelle, host o righe grezze, solo il riepilogo necessario. Il dettaglio completo va nel file di traccia (modello 3).
 
-## 1. Commento Jira — risposta proposta
+## 1. Commento Jira — proposta di risposta
 
 ```markdown
-[AI triage] risposta proposta
+[AI triage] Proposta di risposta
 
-Categoria: <categoria>
+Buongiorno,
 
 <Risposta al reporter in 2-5 frasi, solo su fatti verificati.>
 
-Evidenze:
+Su cosa si basa questa risposta:
 - <affermazione> — verificato (<campo del ticket | nome query>)
 - <affermazione> — verificato (<campo del ticket | nome query>)
 
-Questa risposta è stata preparata da un assistente AI in sola lettura e rivista da <nome operatore> prima della pubblicazione.
+Categoria: <categoria>
+
+La risposta è stata preparata da un assistente AI con accesso in sola lettura e controllata da <nome operatore> prima della pubblicazione.
 ```
 
-## 2. Commento Jira — escalation
+## 2. Commento Jira — escalation (passaggio di consegne)
 
 ```markdown
 [AI triage – escalation]
 
-Categoria: <categoria | sconosciuta>
-Motivo: <trigger scattato, es. "query in timeout", "richiede correzione dati su PLM">
+Buongiorno,
 
-Cosa è stato verificato:
+questo ticket richiede la verifica di un collega del supporto ed è stato assegnato a <jira.assignee_for_escalation>.
+
+Motivo: <condizione scattata, es. "una query non ha risposto in tempo", "serve una correzione dei dati sul PLM">
+Categoria: <categoria | sconosciuta>
+
+Già verificato:
 - <affermazione> — verificato (<campo | nome query>)
 
-Cosa resta aperto:
-- <domanda o verifica che serve a chi prende in carico>
+Da chiarire:
+- <domanda o verifica che serve a chi prende in carico il ticket>
 
 Prossimo passo suggerito: <azione per l'assegnatario>
-Assegnato a: <jira.assignee_for_escalation>
 ```
 
-Le affermazioni `dedotto` o `ipotesi` possono comparire solo in "Cosa resta aperto", marcate come tali.
+Le affermazioni `dedotto` o `ipotesi` possono comparire solo in "Da chiarire", marcate come tali.
 
-## 3. File di run locale
+## 3. File di traccia locale
 
 Percorso: `<instance>/evals/runs/<AAAA-MM-GG>/<CHIAVE>.md`. Non viene mai pubblicato su Jira.
 
 ```markdown
-# Run triage <CHIAVE> — <AAAA-MM-GG HH:MM>
+# Traccia triage <CHIAVE> — <AAAA-MM-GG HH:MM>
 
 - Modalità: <shadow | live>
 - Versione plugin: <version>
 - Esito: <risposta proposta | escalation>
-- Trigger scattati: <elenco | nessuno>
+- Condizioni di escalation scattate: <elenco | nessuna>
 
-## Preflight
+## Controlli preliminari
 | Controllo | Esito | Note |
 |---|---|---|
 | config.yaml | ok/ko | |
@@ -85,10 +90,10 @@ Categoria: <categoria> — segnali: <...> — alternative scartate: <...>
 |---|---|---|
 
 ## Commento proposto
-<testo esatto del commento, template 1 o 2>
+<testo esatto del commento, modello 1 o 2>
 
 ## Scritture su Jira
 | Azione | Confermata dall'utente | Esito |
 |---|---|---|
-<in shadow: "nessuna (modalità shadow)">
+<in shadow: "nessuna (modalità di prova)">
 ```

@@ -1,31 +1,31 @@
-# 0005 — Jira via MCP Atlassian, scelto in setup a scope utente
+# 0005 — Jira tramite server MCP Atlassian, scelto nel setup a livello utente
 
 ## Contesto
 
-Non è ancora verificato se la board è su Jira Cloud o Data Center. Il collega usa già l'MCP server di Atlassian. L'autenticazione deve essere per utente e fuori dal repo.
+Non è ancora certo se la board sia su Jira Cloud o su Data Center. Il collega usa già il server MCP di Atlassian. L'autenticazione deve essere personale e restare fuori dai repository.
 
 ## Decisione
 
-Il plugin **non** include un server Jira. Il setup (fase 1) lo sceglie e lo registra a **scope utente** (`claude mcp add --scope user ...`):
+Il plugin **non** include un server per Jira. Lo sceglie e lo registra il setup (fase 1), **a livello utente** (`claude mcp add --scope user ...`), cioè nella configurazione personale di Claude Code e non nel repository:
 
-- **Cloud**: Atlassian Rovo MCP remoto, OAuth per utente. L'endpoint (es. `https://mcp.atlassian.com/v1/mcp`) e il suo percorso vanno verificati dal setup sulla documentazione Atlassian corrente, non dati per scontati.
-- **Data Center**: `sooperset/mcp-atlassian` (community) con PAT personale.
+- **Cloud**: server MCP remoto Atlassian Rovo, con OAuth personale. L'indirizzo (ad esempio `https://mcp.atlassian.com/v1/mcp`) va verificato dal setup sulla documentazione Atlassian aggiornata, senza darlo per scontato.
+- **Data Center**: `sooperset/mcp-atlassian` (progetto della community) con token personale (PAT).
 
-`config.yaml` dell'istanza indica il flavor (`cloud` | `datacenter`), `base_url` e `project_key`.
+Nel `config.yaml` dell'istanza si indicano il tipo di Jira (`flavor`: `cloud` | `datacenter`), `base_url` e `project_key`.
 
-Identità: in fase interattiva i commenti sono pubblicati con l'utenza del collega e prefissati `[AI triage]`. Un service account si usa solo nella futura fase headless.
+Identità: nell'uso interattivo i commenti sono pubblicati con l'utenza del collega e iniziano con `[AI triage]`. Un account di servizio serve solo per la futura esecuzione automatica.
 
 ## Alternative considerate
 
-- **`.mcp.json` nel plugin con l'URL Rovo**: rifiutato. Non copre Data Center e lega il plugin a un endpoint che può cambiare.
-- **Client REST Jira proprio**: rifiutato. Duplica ciò che gli MCP esistenti fanno già e richiede gestione di token.
+- **`.mcp.json` nel plugin con l'indirizzo di Rovo**: scartata. Non copre Data Center e lega il plugin a un indirizzo che può cambiare.
+- **Un client REST per Jira scritto da zero**: scartata. Rifà ciò che i server MCP esistenti fanno già e richiede di gestire i token.
 
 ## Conseguenze
 
-- Un passo in più nel setup, ma il plugin resta agnostico sul flavor.
-- I nomi dei tool di scrittura Jira dipendono dal server scelto: il template parte senza deny Jira e la fase 1 li aggiunge. In fase 8 si tolgono solo quelli necessari (commento ed eventualmente etichetta/assegnatario) senza metterli in `allow`, così il prompt di permesso di Claude Code resta un secondo controllo. Su Rovo etichetta e assegnatario possono passare da un tool generico di modifica: ogni chiamata va approvata leggendone gli argomenti.
-- La verifica dell'endpoint sul web si fa in fase 0, prima di aprire l'istanza, dove i tool web sono negati.
-- Su Cloud, l'uso headless con token API può richiedere l'abilitazione da parte dell'admin dell'organizzazione.
+- Il setup ha un passo in più, ma il plugin funziona sia con Cloud sia con Data Center.
+- I nomi dei tool che scrivono su Jira dipendono dal server scelto: il modello di istanza parte senza divieti su Jira e la fase 1 li aggiunge. Nella fase 8 si tolgono dai divieti solo quelli necessari (il commento ed eventualmente etichetta e assegnatario), senza aggiungerli ad `allow`: così la richiesta di autorizzazione di Claude Code resta un secondo controllo. Su Rovo etichetta e assegnatario possono passare da un tool generico di modifica del ticket: ogni chiamata va approvata leggendone gli argomenti.
+- La verifica dell'indirizzo sul web si fa in fase 0, prima di aprire l'istanza, dove i tool web sono negati.
+- Su Cloud, l'esecuzione automatica con token API può richiedere l'abilitazione da parte dell'amministratore dell'organizzazione Atlassian.
 
 ## Stato
 

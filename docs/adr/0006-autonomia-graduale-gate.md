@@ -1,34 +1,34 @@
-# 0006 — Autonomia graduale con escalation a regole e gate di valutazione
+# 0006 — Autonomia graduale, escalation a regole e via libera dopo la valutazione
 
 ## Contesto
 
-L'obiettivo ideale è il triage in autonomia, ma una risposta sbagliata data con sicurezza a un utente PLM costa più di un'escalation. La "soglia di confidenza" auto-dichiarata dal modello non è una misura affidabile.
+L'obiettivo ideale è un triage autonomo, ma una risposta sbagliata data con sicurezza a un utente del PLM costa più di un'escalation. Il livello di confidenza che il modello dichiara su sé stesso non è una misura affidabile.
 
 ## Decisione
 
-**Escalation a regole**, non a soglia di confidenza. Scatta per trigger fissi (categoria sconosciuta, istruzioni nel ticket, necessità di scrittura su PLM, query in errore/timeout/troncata, dato atteso assente, contraddizioni, identificativi mancanti) e configurabili (priorità, parole chiave, categorie, reporter). Esito: etichetta `ai-escalated`, assegnazione all'umano in `assignee_for_escalation`, stato del ticket invariato, hand-off da template con trigger, evidenze e passi saltati.
+**Escalation basata su regole**, non su una soglia di confidenza. Scatta per condizioni fisse (categoria sconosciuta, istruzioni nel ticket, necessità di scrivere sul PLM, query in errore, in timeout o troncata, dato atteso assente, contraddizioni, identificativi mancanti) e per condizioni configurabili (priorità, parole chiave, categorie, reporter). Risultato: etichetta `ai-escalated`, assegnazione alla persona indicata in `assignee_for_escalation`, stato del ticket invariato, commento di passaggio di consegne secondo il modello, con la condizione scattata, le evidenze e i passi saltati.
 
-**Autonomia per gradi**, ogni passo condizionato al precedente:
+**Autonomia per gradi**: si passa a ogni livello solo dopo aver completato il precedente.
 
-1. **Shadow**: ~30 ticket chiusi, output solo su file, valutazione umana in `evals/grading.csv`.
-2. **Gate**: soglia sul tasso di esiti corretti o escalation corrette **e** zero errori presentati come certi (formula in [e2e-protocol.md](../e2e-protocol.md)).
-3. **E2E live**: 1-3 ticket aperti, ogni scrittura Jira approvata.
-4. **Bozze**: 2-4 settimane in live con approvazione di ogni scrittura.
-5. **Headless**: fuori dalla 0.1.0, valutato solo dopo.
+1. **Valutazione di prova**: ~30 ticket chiusi, risultati solo su file, giudizio di una persona in `evals/grading.csv`.
+2. **Via libera**: soglia minima sulla quota di risposte corrette o escalation corrette, **e** nessuna risposta sbagliata presentata come certa (formula in [e2e-protocol.md](../e2e-protocol.md)).
+3. **Collaudo**: 1-3 ticket aperti, ogni scrittura su Jira approvata.
+4. **Rodaggio**: 2-4 settimane in modalità operativa, con l'approvazione di ogni scrittura.
+5. **Esecuzione automatica**: esclusa dalla 0.1.0, da valutare solo dopo.
 
 Dettagli in [e2e-protocol.md](../e2e-protocol.md).
 
 ## Alternative considerate
 
-- **Autonomia subito con revisione a campione**: rifiutato. Nessuna misura prima del danno.
-- **Soglia di confidenza del modello**: rifiutato. Non calibrata e non verificabile.
-- **Gate solo sul tasso di correttezza**: rifiutato. Una media alta può nascondere errori sicuri; per questo il vincolo zero.
+- **Autonomia subito, con controlli a campione**: scartata. Non c'è nessuna misura prima che si verifichi un danno.
+- **Soglia sulla confidenza del modello**: scartata. Non è calibrata né verificabile.
+- **Via libera basato solo sulla quota di risposte corrette**: scartata. Una media alta può nascondere errori dati per certi; da qui il vincolo di zero errori di questo tipo.
 
 ## Conseguenze
 
-- Il tasso di escalation iniziale sarà alto: è accettabile, si riduce migliorando catalogo e categorie.
-- Ogni cambio di skill o catalogo richiede di ripetere la shadow.
-- Prerequisiti prima di leggere dati reali (fase 0 del setup): piano Claude aziendale (Team/Enterprise), OK scritto del cliente, login DB in sola lettura confermato dal DBA.
+- All'inizio le escalation saranno molte: è accettabile, e calano migliorando catalogo e categorie.
+- Ogni modifica alla skill o al catalogo richiede di ripetere la valutazione di prova.
+- Prima di leggere dati reali (fase 0 del setup) servono: piano Claude aziendale (Team o Enterprise), autorizzazione scritta del cliente, login in sola lettura confermato dal DBA.
 
 ## Stato
 

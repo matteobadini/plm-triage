@@ -1,33 +1,33 @@
-# 0003 — Credenziali mai nel repo
+# 0003 — Credenziali mai nei repository
 
 ## Contesto
 
-Vincolo di partenza: nessuna credenziale nel plugin o nei repo. La proposta iniziale affermava "Claude non vede mai la password" con uno script lanciato via Bash: la review avversaria ha mostrato che è falso, perché con Bash Claude può leggere env, keyring o file.
+Vincolo di partenza: nessuna credenziale nel plugin o nei repository. La proposta iniziale sosteneva che "Claude non vede mai la password", usando uno script lanciato con Bash. Una revisione critica ha mostrato che non è vero: con Bash Claude può leggere variabili d'ambiente, keyring o file.
 
 ## Decisione
 
-Le credenziali DB vivono **nel processo del server MCP** `plm-db`, risolte in quest'ordine:
+Le credenziali del database restano **nel processo del server MCP** `plm-db`, che le cerca in quest'ordine:
 
-1. env `PLM_DB_HOST/PORT/DATABASE/USER/PASSWORD` (per il futuro headless);
-2. userConfig del plugin, con `db_password` `sensitive` (salvata nel credential store del SO), passato come `PLM_UC_*`; ignorati valori vuoti o che iniziano ancora con `${`;
-3. keyring del SO (servizio `plm-triage`), impostato dal collega nel proprio terminale con `plm-db set-credentials` (getpass).
+1. variabili d'ambiente `PLM_DB_HOST/PORT/DATABASE/USER/PASSWORD` (per la futura esecuzione automatica);
+2. opzioni del plugin, con `db_password` marcata `sensitive` (salvata nell'archivio credenziali del sistema operativo), passate al server come `PLM_UC_*`; i valori vuoti o che iniziano ancora con `${` vengono ignorati;
+3. keyring del sistema operativo (servizio `plm-triage`), dove il collega salva le credenziali dal proprio terminale con `plm-db set-credentials` (la password non viene mostrata durante la digitazione).
 
-Il triage non usa Bash e l'istanza non lo pre-autorizza: ogni comando richiede l'approvazione dell'umano. Gli errori del server non includono mai password o stringa di connessione.
+Il triage non usa Bash e l'istanza non lo pre-autorizza: ogni comando richiede l'approvazione dell'utente. Gli errori del server non contengono mai la password né la stringa di connessione.
 
-Jira: OAuth per utente (Rovo) o PAT nella configurazione MCP a scope utente, mai nel repo ([0005](0005-jira-via-mcp-atlassian.md)).
+Jira: OAuth personale (Rovo) oppure token personale nella configurazione del server MCP a livello utente, mai nel repository ([0005](0005-jira-via-mcp-atlassian.md)).
 
 ## Alternative considerate
 
-- **File `.env` nel repo istanza con deny di lettura**: rifiutato. Il deny di Read non ferma script che aprono file da soli.
-- **Solo keyring**: insufficiente per l'headless futuro.
-- **Solo env**: scomodo e meno sicuro sul PC del collega.
+- **File `.env` nel repository di istanza, con lettura negata**: scartata. Negare il tool Read non ferma uno script che apre il file da solo.
+- **Solo keyring**: non basta per la futura esecuzione automatica.
+- **Solo variabili d'ambiente**: scomodo e meno sicuro sul PC del collega.
 
 ## Conseguenze
 
-- La garanzia regge solo se Bash resta fuori da `allow` e l'umano non approva comandi che leggono credenziali: da mantenere nelle revisioni di `instance-template/.claude/settings.json`.
-- Password nel keyring (via raccomandata): un valore inserito nelle opzioni del plugin ha la precedenza e un valore sensibile non si corregge facilmente.
-- gitleaks in CI come rete di sicurezza.
-- Rotazione: cambio password lato DB, poi nuovo inserimento in userConfig o keyring.
+- La garanzia regge solo se Bash resta fuori da `allow` e l'utente non approva comandi che leggono le credenziali. Va controllato a ogni revisione di `instance-template/.claude/settings.json`.
+- La password va nel keyring (via consigliata): un valore inserito nelle opzioni del plugin ha la precedenza, e un valore `sensitive` non si corregge facilmente.
+- gitleaks in CI come ulteriore protezione.
+- Cambio password: si cambia sul database, poi si inserisce di nuovo nelle opzioni del plugin o nel keyring.
 
 ## Stato
 

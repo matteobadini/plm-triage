@@ -8,19 +8,19 @@ Istruzioni per agenti (e persone) che lavorano **su questo repo pubblico**. Non 
 |---|---|
 | `.claude-plugin/plugin.json` | manifest: `userConfig`, MCP `plm-db` inline |
 | `.claude-plugin/marketplace.json` | marketplace `plm-triage`, plugin con `source: "."` |
-| `skills/triage-ticket/SKILL.md` | procedura di triage (principi, passi, preflight, escalation) |
-| `skills/triage-ticket/templates.md` | template bozza di risposta e hand-off di escalation |
-| `skills/setup/SKILL.md` | setup a fasi con checkpoint, stato in `<istanza>/setup-state.json` |
+| `skills/triage-ticket/SKILL.md` | procedura di triage (principi, passi, controlli preliminari, escalation) |
+| `skills/triage-ticket/templates.md` | modelli di commento: proposta di risposta e passaggio di consegne in escalation |
+| `skills/setup/SKILL.md` | setup a fasi con punti di controllo, stato in `<istanza>/setup-state.json` |
 | `server/` | MCP locale `plm-db` (pacchetto `plm_db_mcp`, CLI `plm-db-mcp` e `plm-db`), test in `server/tests/` |
-| `instance-template/` | scheletro del repo istanza privato: `CLAUDE.md`, `.claude/settings.json`, `config.yaml`, `catalog/`, `inbox/`, `evals/` |
-| `docs/` | architettura, setup, protocollo E2E, ADR |
+| `instance-template/` | modello del repository di istanza privato: `CLAUDE.md`, `.claude/settings.json`, `config.yaml`, `catalog/`, `inbox/`, `evals/` |
+| `docs/` | architettura, setup, protocollo di valutazione e collaudo, ADR |
 | `.github/workflows/ci.yml` | ruff + pytest (ubuntu, windows), gitleaks |
 
 ## Regole non negoziabili
 
 1. **Nessun dato cliente**, mai: niente nomi di clienti, testi di ticket, hostname interni, schema reale. Gli esempi usano uno schema fittizio (`DEMO_ITEM`, `DEMO_CHANGE`). La conoscenza generica di Agile PLM è ammessa solo se marcata "da verificare sull'istanza".
 2. **Nessuna credenziale** nel repo, nemmeno di test. Le credenziali vivono nel processo del server MCP (userConfig sensitive, keyring, env).
-3. **Lingue**: documentazione, skill e template in italiano; codice, identificatori, commenti nel codice e messaggi di commit in inglese.
+3. **Lingue**: documentazione, skill e modelli di commento in italiano; codice, identificatori, commenti nel codice e messaggi di commit in inglese.
 4. **Essenzialità**: nessun file che non si guadagni il posto. Niente router, playbook, file di principi, hook.
 5. **Niente SQL libero**: il server espone solo `ping`, `list_queries`, `describe_query`, `run_query`. Non aggiungere tool che eseguano SQL arbitrario.
 6. Non affermare fatti su Claude Code non verificati sulla documentazione ufficiale.
@@ -41,13 +41,13 @@ claude --plugin-dir ./            # prova locale del plugin
 2. Solo `SELECT`/`WITH`, un'istruzione, parametri come `@param` tutti dichiarati, tabelle fittizie.
 3. `uv run pytest`: un test carica tutti gli esempi del catalogo.
 
-Le query reali stanno solo nel repo istanza privato.
+Le query reali stanno solo nel repository di istanza privato.
 
-## Cambiare uno skill
+## Cambiare una skill
 
 - I passi di `triage-ticket` vengono copiati verbatim nella task list: rinumerare o riformulare cambia il comportamento. Tieni i passi brevi e verificabili.
-- I trigger di escalation sono regole, non giudizi: se ne aggiungi uno, aggiorna `instance-template/config.yaml` e `docs/e2e-protocol.md` se cambia la rubrica.
-- Un cambio di procedura richiede di ripetere la shadow eval sull'istanza prima di tornare live.
+- Le condizioni di escalation sono regole, non giudizi: se ne aggiungi una, aggiorna `instance-template/config.yaml`, e `docs/e2e-protocol.md` se cambiano i criteri di giudizio.
+- Un cambio di procedura richiede di ripetere la valutazione di prova sull'istanza prima di tornare in modalità operativa (`mode: live`).
 
 ## Versioning
 
@@ -63,4 +63,4 @@ SemVer. Ogni modifica rilasciata: bump di `version` in `.claude-plugin/plugin.js
 
 ## Quando scrivere un ADR
 
-Quando cambi una decisione già registrata in `docs/adr/`, o ne prendi una che vincola chi viene dopo: confine di sicurezza, modello di accesso a DB o Jira, gestione credenziali, livello di autonomia, struttura del plugin. Formato in `docs/adr/README.md`.
+Quando cambi una decisione già registrata in `docs/adr/`, o ne prendi una che vincola chi lavorerà dopo di te: confine di sicurezza, modello di accesso a DB o Jira, gestione credenziali, livello di autonomia, struttura del plugin. Formato in `docs/adr/README.md`.
