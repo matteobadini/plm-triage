@@ -6,7 +6,8 @@ Formato [Keep a Changelog](https://keepachangelog.com/it/1.1.0/), versioni [SemV
 
 ### Changed
 
-- Documentazione, skill e modelli di commento riscritti in un italiano più semplice, con termini uniformi (glossario in `docs/architecture.md`).
+- Skill `triage-ticket` e `setup`: istruzioni per Claude riscritte in inglese, con una regola esplicita che impone l'italiano per tutto ciò che vede l'utente; domande dei punti di controllo, messaggio per i colleghi e modelli di commento e del file di traccia restano in italiano, testuali. Procedura invariata.
+- Documentazione e modelli di commento riscritti in un italiano più semplice, con termini uniformi (glossario in `docs/architecture.md`).
 - Skill `setup`: a fine fase 3 Claude prepara un messaggio da inoltrare ai colleghi con l'URL del repository di istanza; in fase 0 la domanda sul repository indica dove trovare l'URL e accetta indirizzi HTTPS e SSH.
 
 ## [0.1.0] - 2026-10-16

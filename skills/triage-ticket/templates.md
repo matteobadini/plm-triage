@@ -1,8 +1,8 @@
-# Modelli di output — triage-ticket
+# Output templates — triage-ticket
 
-Sostituisci i segnaposto `<...>`. I commenti Jira li leggono gli utenti che hanno aperto il ticket: niente SQL, nomi di tabelle, host o righe grezze, solo il riepilogo necessario. Il dettaglio completo va nel file di traccia (modello 3).
+The templates below are user-facing and stay in Italian: copy their text verbatim and replace only the `<...>` placeholders, writing the replacements in Italian. Jira comments are read by the users who opened the ticket: no SQL, table names, hosts or raw rows, only the necessary summary. The full detail goes into the trace file (template 3).
 
-## 1. Commento Jira — proposta di risposta
+## 1. Jira comment — proposed reply
 
 ```markdown
 [AI triage] Proposta di risposta
@@ -20,7 +20,7 @@ Categoria: <categoria>
 La risposta è stata preparata da un assistente AI con accesso in sola lettura e controllata da <nome operatore> prima della pubblicazione.
 ```
 
-## 2. Commento Jira — escalation (passaggio di consegne)
+## 2. Jira comment — escalation (passaggio di consegne)
 
 ```markdown
 [AI triage – escalation]
@@ -41,11 +41,11 @@ Da chiarire:
 Prossimo passo suggerito: <azione per l'assegnatario>
 ```
 
-Le affermazioni `dedotto` o `ipotesi` possono comparire solo in "Da chiarire", marcate come tali.
+`dedotto` or `ipotesi` statements may appear only under "Da chiarire", marked as such.
 
-## 3. File di traccia locale
+## 3. Local trace file
 
-Percorso: `<instance>/evals/runs/<AAAA-MM-GG>/<CHIAVE>.md`. Non viene mai pubblicato su Jira.
+Path: `<instance>/evals/runs/<AAAA-MM-GG>/<CHIAVE>.md`. It is never published to Jira.
 
 ```markdown
 # Traccia triage <CHIAVE> — <AAAA-MM-GG HH:MM>

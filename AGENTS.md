@@ -20,7 +20,7 @@ Istruzioni per agenti (e persone) che lavorano **su questo repo pubblico**. Non 
 
 1. **Nessun dato cliente**, mai: niente nomi di clienti, testi di ticket, hostname interni, schema reale. Gli esempi usano uno schema fittizio (`DEMO_ITEM`, `DEMO_CHANGE`). La conoscenza generica di Agile PLM è ammessa solo se marcata "da verificare sull'istanza".
 2. **Nessuna credenziale** nel repo, nemmeno di test. Le credenziali vivono nel processo del server MCP (userConfig sensitive, keyring, env).
-3. **Lingue**: documentazione, skill e modelli di commento in italiano; codice, identificatori, commenti nel codice e messaggi di commit in inglese.
+3. **Lingue**: istruzioni delle skill in inglese, con una regola esplicita che impone a Claude di rispondere all'utente e scrivere su Jira e nei file di traccia in italiano; testi delle skill mostrati alle persone (domande dei punti di controllo, modelli di commento Jira e del file di traccia) e tutta la documentazione in italiano; codice, identificatori, commenti nel codice e messaggi di commit in inglese.
 4. **Essenzialità**: nessun file che non si guadagni il posto. Niente router, playbook, file di principi, hook.
 5. **Niente SQL libero**: il server espone solo `ping`, `list_queries`, `describe_query`, `run_query`. Non aggiungere tool che eseguano SQL arbitrario.
 6. Non affermare fatti su Claude Code non verificati sulla documentazione ufficiale.
