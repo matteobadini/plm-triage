@@ -1,0 +1,58 @@
+{
+  "name": "plm-triage",
+  "version": "0.1.0",
+  "description": "Triage assistito dall'AI dei ticket Jira di supporto per un PLM agile: legge il ticket, interroga il DB PLM solo tramite query di catalogo approvate (sola lettura) e propone una risposta o un'escalation motivata.",
+  "author": {
+    "name": "Matteo Badini"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/matteobadini/plm-triage",
+  "userConfig": {
+    "db_host": {
+      "type": "string",
+      "title": "Host DB PLM",
+      "description": "Hostname o IP del server SQL Server del PLM (lascia vuoto se usi variabili d'ambiente o il keyring)."
+    },
+    "db_port": {
+      "type": "string",
+      "title": "Porta DB PLM",
+      "description": "Porta TCP del server SQL Server.",
+      "default": "1433"
+    },
+    "db_database": {
+      "type": "string",
+      "title": "Database PLM",
+      "description": "Nome del database PLM."
+    },
+    "db_user": {
+      "type": "string",
+      "title": "Utente DB (sola lettura)",
+      "description": "Utente SQL con permessi di sola lettura sul database PLM."
+    },
+    "db_password": {
+      "type": "string",
+      "title": "Password DB",
+      "description": "Password dell'utente di sola lettura. Salvata nel credential store del sistema operativo.",
+      "sensitive": true
+    },
+    "instance_dir": {
+      "type": "directory",
+      "title": "Cartella istanza",
+      "description": "Percorso del clone locale del repository privato di istanza (contiene config.yaml, catalog/, evals/)."
+    }
+  },
+  "mcpServers": {
+    "plm-db": {
+      "command": "uv",
+      "args": ["run", "--directory", "${CLAUDE_PLUGIN_ROOT}/server", "plm-db-mcp"],
+      "env": {
+        "PLM_UC_DB_HOST": "${user_config.db_host}",
+        "PLM_UC_DB_PORT": "${user_config.db_port}",
+        "PLM_UC_DB_DATABASE": "${user_config.db_database}",
+        "PLM_UC_DB_USER": "${user_config.db_user}",
+        "PLM_UC_DB_PASSWORD": "${user_config.db_password}",
+        "PLM_UC_INSTANCE_DIR": "${user_config.instance_dir}"
+      }
+    }
+  }
+}

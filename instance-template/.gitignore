@@ -1,0 +1,13 @@
+# Local query audit log (no result data, but per-user)
+logs/
+
+# Saved queries waiting for conversion: keep only the README
+inbox/*
+!inbox/README.md
+
+# Per-user setup progress
+setup-state.json
+
+# Triage run traces contain client data. They may be committed to this
+# PRIVATE repo for review; uncomment to keep them local only.
+# evals/runs/

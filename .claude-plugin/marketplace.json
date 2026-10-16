@@ -1,0 +1,14 @@
+{
+  "name": "plm-triage",
+  "owner": {
+    "name": "Matteo Badini"
+  },
+  "description": "Marketplace del plugin plm-triage: triage assistito dall'AI dei ticket di supporto PLM.",
+  "plugins": [
+    {
+      "name": "plm-triage",
+      "source": ".",
+      "description": "Triage assistito dall'AI dei ticket Jira di supporto per un PLM agile, con accesso DB in sola lettura tramite catalogo di query approvate."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "extraKnownMarketplaces": {
+    "plm-triage": {
+      "source": {
+        "source": "github",
+        "repo": "matteobadini/plm-triage"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "plm-triage@plm-triage": true
+  },
+  "permissions": {
+    "allow": [
+      "mcp__plugin_plm-triage_plm-db__*"
+    ],
+    "deny": [
+      "WebFetch",
+      "WebSearch"
+    ]
+  }
+}

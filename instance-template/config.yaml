@@ -1,0 +1,55 @@
+# Configurazione dell'istanza plm-triage.
+# Compilata durante /plm-triage:setup (fasi 1 e 5). Sostituisci tutti i segnaposto <...>.
+# Questo file vive solo nel repo istanza PRIVATO: non copiarlo nel repo pubblico.
+
+# Modalità di triage:
+#   shadow -> il triage salva solo il file di run in evals/runs/ e NON scrive su Jira
+#   live   -> il triage può scrivere su Jira, previa conferma esplicita per ogni scrittura
+# Si passa a live solo dopo il gate della fase 7.
+mode: shadow
+
+jira:
+  # cloud (URL *.atlassian.net, Atlassian Rovo MCP) | datacenter (mcp-atlassian con PAT)
+  flavor: cloud
+  base_url: https://<SITO>.atlassian.net
+  project_key: <PROJECT_KEY>
+  # JQL dei ticket nuovi da sottoporre a triage (esclude quelli già trattati).
+  jql_new_tickets: >-
+    project = <PROJECT_KEY> AND statusCategory = "To Do"
+    AND (labels IS EMPTY OR labels NOT IN (ai-triaged, ai-escalated))
+    ORDER BY created ASC
+  # Utente a cui assegnare le escalation (accountId su Cloud, username su Data Center).
+  assignee_for_escalation: <ASSIGNEE>
+  labels:
+    triaged: ai-triaged      # aggiunta quando si pubblica una risposta proposta
+    escalated: ai-escalated  # aggiunta quando si pubblica un'escalation
+
+# Categorie note. Il triage assegna a ogni ticket una sola categoria (o "sconosciuta").
+# - id: identificativo breve, senza spazi
+# - description: cosa rientra nella categoria (usata per classificare)
+# - signals: indizi tipici nel testo del ticket (facoltativo)
+# - queries: nomi delle query di catalogo (campo "name" nell'header .sql) da eseguire
+#   per questa categoria; ogni nome deve comparire in list_queries di plm-db.
+# Gli esempi sotto usano le query dimostrative del template: sostituiscili in fase 5.
+categories:
+  - id: dati_item
+    description: Domande su stato, revisione o attributi di un item identificato dal suo numero.
+    signals: ["numero item", "revisione", "lifecycle"]
+    queries: [item_by_number]
+  - id: change_aperte
+    description: Domande su change ancora aperte che coinvolgono un item.
+    signals: ["change", "ECO", "in approvazione"]
+    queries: [item_by_number, open_changes_for_item]
+
+# Trigger di escalation configurabili. Si sommano ai trigger fissi dello skill
+# (categoria sconosciuta, richieste di azioni nel ticket, scritture su PLM necessarie,
+# query in errore/timeout/troncate, dati mancanti, contraddizioni, identificativi assenti).
+escalation:
+  # Priorità Jira che vanno sempre in escalation.
+  priorities: [Highest]
+  # Parole chiave (case-insensitive) nel riepilogo o nella descrizione.
+  keywords: ["produzione ferma", "urgente", "dati persi"]
+  # Categorie che non vengono mai risolte in automatico.
+  always_escalate_categories: []
+  # Reporter i cui ticket vanno sempre in escalation (accountId o username).
+  reporters: []

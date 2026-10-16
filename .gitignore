@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.egg-info/
+build/
+dist/
+
+# Client material must never live in this public repo
+instance/
+*.local.*
+.env
+.env.*
+
+# Logs
+logs/
+*.log
