@@ -10,9 +10,9 @@ flowchart LR
   MA --> J[(Jira)]
   S --> MP["MCP plm-db<br/>(locale, stdio)"]
   MP --> DB[(SQL Server PLM)]
-  CS["Credential store SO /<br/>keyring / env"] -.credenziali.-> MP
-  I["Repo istanza privato<br/>config.yaml · catalog/ · evals/"] -.config e query.-> S
-  I -.catalog/*.sql.-> MP
+  CS["Credential store SO /<br/>keyring / env"] -.->|"credenziali"| MP
+  I["Repo istanza privato<br/>config.yaml · catalog/ · evals/"] -.->|"config e query"| S
+  I -.->|"catalog/*.sql"| MP
 ```
 
 ## Componenti
